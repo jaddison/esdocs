@@ -1,0 +1,36 @@
+import django
+from django.db import connections
+
+from ...controller import Controller
+from ...utils import run as base_run
+
+
+class DjangoController(Controller):
+    def parallel_prep(self):
+        # this method is only used when doing parallel bulk indexing
+        # via multiprocessing.Pool (see policies.py)
+
+        # Django connections need to be closed when a new process is
+        # forked (will be auto re-opened)
+        connections.close_all()
+
+        super().parallel_prep()
+
+
+def run():
+    import os, sys
+    if os.getcwd() not in sys.path:
+        # Make sure that `django.setup()` below can find contents of the current
+        # directory, so it can find the settings file (it is assumed that the esdocs-django
+        # command will be run from the same dir a Django project's manage.py).
+        sys.path.append(os.getcwd())
+
+    # Note: the serializers and compatibility hooks are already initialized
+    # in esdocs.contrib.esdjango.apps
+    django.setup()
+
+    base_run(DjangoController)
+
+
+if __name__ == '__main__':
+    run()
