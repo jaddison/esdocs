@@ -1,8 +1,12 @@
+import logging
+
 import django
 from django.db import connections
 
 from ...controller import Controller
 from ...utils import run as base_run
+
+logger = logging.getLogger(__name__)
 
 
 class DjangoController(Controller):
@@ -25,9 +29,13 @@ def run():
         # command will be run from the same dir a Django project's manage.py).
         sys.path.append(os.getcwd())
 
-    # Note: the serializers and compatibility hooks are already initialized
-    # in esdocs.contrib.esdjango.apps
-    django.setup()
+    try:
+        # Note: the serializers and compatibility hooks are already initialized
+        # in esdocs.contrib.esdjango.apps
+        django.setup()
+    except ImportError:
+        print("esdocs-django must be run from the root of your Django project (where manage.py lives).")
+        return
 
     base_run(DjangoController)
 

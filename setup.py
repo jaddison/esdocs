@@ -33,6 +33,7 @@ setup(
         'Programming Language :: Python',
         'Programming Language :: Python :: 3 :: Only',
         'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
@@ -44,11 +45,11 @@ setup(
     packages=find_packages(),
     py_modules=['esdocs'],
 
-    python_requires='>=3.5',
+    python_requires='>=3.4',
     install_requires=[
         'elasticsearch-dsl>6.2.1'
     ],
-    extras_requires={
+    extras_require={
         'gevent': ['gevent', 'gipc']
     },
 
