@@ -86,33 +86,31 @@ class Controller:
             pass
 
     def index_list(self, **options):
-        print("Known, managed indexes{}:".format(" (limited results due to --indexes option)" if self.index_names else ""))
+        logger.info("Known, managed indexes{}:".format(
+            " (limited results due to --indexes option)" if self.index_names else ""))
         for name, index in self.indexes.items():
-            print(" - {}".format(name))
+            logger.info(" - {}".format(name))
 
     def index_init(self, **options):
         for name, index in self.new_indexes.items():
             if not self.client.indices.exists(name):
                 self._index_create(index, name, True)
             else:
-                print("Index '{}' already exists. No change made.".format(index._name))
+                logger.info("Index '{}' already exists. No change made.".format(index._name))
 
     def index_update(self, **options):
         for name, index in self.indexes.items():
             if not self.client.indices.exists(name):
                 self._index_create(self.new_indexes[name], name, True)
             else:
-                # index.close(using=self.using)
                 try:
                     index.save(using=self.using)
-                    print("Updated index mapping for '{}'.".format(name))
+                    logger.info("Updated index mapping for '{}'.".format(name))
                 except elasticsearch.exceptions.RequestError as e:
-                    print(str(e))
-                # index.open(using=self.using)
+                    logger.info(str(e))
 
     def index_rebuild(self, **options):
-        multiproc = options.get('multiproc', False)
-        if multiproc:
+        if options.get('multi') is not None:
             policy = ParallelStreamingPolicy(self.parallel_prep)
         else:
             policy = StreamingPolicy()
@@ -120,26 +118,26 @@ class Controller:
         for name, index in self.new_indexes.items():
             self._index_create(index, name, set_alias=False)
 
-            print("Updating index settings to be bulk-indexing friendly...")
+            logger.info("Updating index settings to be bulk-indexing friendly...")
             original_settings = index.get_settings(using=self.using).get(index._name, {}).get('settings', {})
             index.put_settings(body={
                 "index.number_of_replicas": 0,
                 "index.refresh_interval": '-1'
             })
 
-            print("Indexing data for '{}'...".format(index._name))
+            logger.info("Indexing data for '{}'...".format(index._name))
 
             for serializer in self._serializers[name]:
-                print(" - processing '{}' documents: ".format(serializer.document.__name__), end='', flush=True)
+                logger.info(" - processing '{}' documents".format(serializer.document.__name__))
                 policy.bulk_operation(serializer, index=index._name, client=self.client, **options)
-                print()
+                logger.info()
 
-            print("Data indexed data for '{}'.".format(index._name))
+            logger.info("Data indexed data for '{}'.".format(index._name))
 
-            print("Force merging index data...")
+            logger.info("Force merging index data...")
             index.forcemerge()
 
-            print("Restoring original/default index settings...")
+            logger.info("Restoring original/default index settings...")
             index.put_settings(body={
                 "index.number_of_replicas": original_settings.get('index', {}).get('number_of_replicas', 1),
                 "index.refresh_interval": original_settings.get('index', {}).get('refresh_interval', '1s')
@@ -153,7 +151,7 @@ class Controller:
                     {'add': {'index': index._name, 'alias': name}}
                 ]
             })
-            print("Created alias '{}' for '{}'.".format(name, index._name))
+            logger.info("Created alias '{}' for '{}'.".format(name, index._name))
 
         policy.close()
 
@@ -166,10 +164,10 @@ class Controller:
     def _index_create(self, index, alias, set_alias=False):
         if not set_alias:
             index.create(using=self.using)
-            print("Created index '{}', no alias set.".format(index._name))
+            logger.info("Created index '{}', no alias set.".format(index._name))
         else:
             index.aliases(**{alias: {}}).create(using=self.using)
-            print("Created index '{}', aliased to '{}'.".format(index._name, alias))
+            logger.info("Created index '{}', aliased to '{}'.".format(index._name, alias))
 
     def _indexes_delete(self, **options):
         old_indexes = []
@@ -182,9 +180,9 @@ class Controller:
             no_input = options.get('no_input', False)
             if no_input:
                 self.client.indices.delete(",".join(old_indexes))
-                print("Deleting old unaliased indexes:")
+                logger.info("Deleting old unaliased indexes:")
                 for _old in old_indexes:
-                    print(" - deleted index '{}'".format(_old))
+                    logger.info(" - deleted index '{}'".format(_old))
             else:
                 for _old in old_indexes:
                     user_input = 'y' if no_input else ''
@@ -194,4 +192,4 @@ class Controller:
                             break
                     if user_input == 'y':
                         self.client.indices.delete(_old)
-                        print(" - deleted index '{}'".format(_old))
+                        logger.info(" - deleted index '{}'".format(_old))

@@ -73,7 +73,7 @@ class ParallelStreamingPolicy(BaseIndexingPolicy):
         self.parallel_prep = parallel_prep
 
     def bulk_operation(self, serializer, index, client, **options):
-        procs = options.get('processes')
+        procs = options.get('multi')
         if not procs:
             procs = os.cpu_count()
             procs = procs if procs > 1 else 2

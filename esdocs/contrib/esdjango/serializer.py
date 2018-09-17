@@ -50,7 +50,6 @@ class DjangoSerializer(Serializer):
             if end and queryset_end > end:
                 queryset_end = end
 
-            print('.', end='', flush=True)
             n = 0
             for n, row in enumerate(queryset[queryset_start: queryset_end]):
                 yield row

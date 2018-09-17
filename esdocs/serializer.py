@@ -243,5 +243,4 @@ class Serializer(metaclass=_SerializerMetaclass):
             if not ok:
                 action, result = result.popitem()
                 doc_id = '/%s/doc/%s' % (index, result['_id'])
-                print('Failed to %s document %s:' % (action, doc_id,), result)
-                # break
+                logger.warning('Failed to {} document {}: {}'.format(action, doc_id, result))

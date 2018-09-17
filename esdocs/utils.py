@@ -32,12 +32,9 @@ def add_parser_arguments(parser):
                         help="Comma-separate list of index names to target")
     parent.add_argument('--using', action='store', default=None,
                         help="Elasticsearch named connection to use")
-
-    parent.add_argument('--multiproc', action='store_true', default=False,
-                        help="Enable multiple process indexing")
-    parent.add_argument('--numprocs', action='store', type=int, default=None,
-                        help="How many processes to use for indexing; "
-                             "default is CPU core count")
+    parent.add_argument('--multi', nargs='?', const=0, type=int,
+                        help="Enable multiple processes and optionally set number of "
+                             "CPU cores to use (defaults to all cores)")
 
     # hack to get comment args into the main parser;
     # stolen from python argparse source code
@@ -50,7 +47,8 @@ def add_parser_arguments(parser):
         parser._defaults.update(defaults)
 
     sps = parser.add_subparsers(title="commands", dest='action')
-    # this is a hack for a Django 1.11 bug: https://code.djangoproject.com/ticket/29295;
+    # this is a hack for a Django 1.11 bug:
+    # https://code.djangoproject.com/ticket/29295;
     # TODO: remove when we drop support for broken Django versions
     sps._parser_class = argparse.ArgumentParser
 
@@ -58,7 +56,8 @@ def add_parser_arguments(parser):
     p = sps.add_parser('init', help="Initialize indexes", parents=[parent])
     p = sps.add_parser('update', help="Update indexes", parents=[parent])
     p = sps.add_parser('rebuild', help="Rebuild indexes", parents=[parent])
-    p.add_argument('--cleanup', action="store_true", dest='delete_old_indexes', default=False)
+    p.add_argument('--cleanup', action="store_true", dest='delete_old_indexes',
+                   default=False)
     p = sps.add_parser('cleanup', help="Delete unaliased indexes", parents=[parent])
 
 
@@ -69,7 +68,8 @@ def run(controller_klass=None):
     from . import app_version, logger as parent_logger
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("-v", "--verbose", action="store_true", help="increase output verbosity")
+    parser.add_argument("-v", "--verbose", action="store_true",
+                        help="increase output verbosity")
     parser.add_argument("--version", action="version", version=app_version)
     add_parser_arguments(parser)
     args = parser.parse_args()
@@ -86,12 +86,17 @@ def run(controller_klass=None):
 
     parent_logger.addHandler(logh)
 
-    logger.info('Logging enabled at {} verbosity'.format(logging.getLevelName(logger.getEffectiveLevel())))
-    logger.info('Multi-process indexing: {}'.format('available' if gevent_enabled else 'unavailable (set environment variable ESDOCS_GEVENT=1)'))
+    logger.info('Logging enabled at {} verbosity'.format(
+        logging.getLevelName(logger.getEffectiveLevel())))
 
-    if not gevent_enabled and args.multiproc:
-        logger.error('Multi-process indexing not available unless environment variable ESDOCS_GEVENT=1 is set, stopping...')
+    if not gevent_enabled and args.multi is not None:
+        logger.error('Multi-process indexing not available unless environment '
+                     'variable ESDOCS_GEVENT=1 is set, stopping...')
         return
+    else:
+        logger.info('Multi-process indexing: {}'.format(
+            'available' if gevent_enabled else 'unavailable (set environment '
+                                               'variable ESDOCS_GEVENT=1)'))
 
     register_serializers(os.getenv('ESDOCS_SERIALIZER_MODULES'))
     Serializer.register_hooks(os.getenv('ESDOCS_SERIALIZER_COMPATIBILITY_HOOKS'))

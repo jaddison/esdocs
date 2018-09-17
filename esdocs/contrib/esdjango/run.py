@@ -34,7 +34,7 @@ def run():
         # in esdocs.contrib.esdjango.apps
         django.setup()
     except ImportError:
-        print("esdocs-django must be run from the root of your Django project (where manage.py lives).")
+        logger.info("esdocs-django must be run from the root of your Django project (where manage.py lives).")
         return
 
     base_run(DjangoController)
