@@ -30,10 +30,9 @@ pip install esdocs[gevent]
 ##### Command Line Usage
 
 ```
-esdocs -h
-
-usage: run.py [-h] [-v] [--version] [--no_input] [--indexes INDEXES]
-              [--using USING] [--multiproc] [--numprocs NUMPROCS]
+$ esdocs -h
+usage: esdocs [-h] [-v] [--version] [--no_input] [--indexes INDEXES]
+              [--using USING] [--multi [MULTI]]
               {list,init,update,rebuild,cleanup} ...
 
 optional arguments:
@@ -45,9 +44,8 @@ optional arguments:
                         actions)
   --indexes INDEXES     Comma-separate list of index names to target
   --using USING         Elasticsearch named connection to use
-  --multiproc           Enable multiple process indexing
-  --numprocs NUMPROCS   How many processes to use for indexing; default is CPU
-                        core count
+  --multi [MULTI]       Enable multiple processes and optionally set number of
+                        CPU cores to use (defaults to all cores)
 
 commands:
   {list,init,update,rebuild,cleanup}

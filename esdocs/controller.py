@@ -130,7 +130,6 @@ class Controller:
             for serializer in self._serializers[name]:
                 logger.info(" - processing '{}' documents".format(serializer.document.__name__))
                 policy.bulk_operation(serializer, index=index._name, client=self.client, **options)
-                logger.info()
 
             logger.info("Data indexed data for '{}'.".format(index._name))
 
