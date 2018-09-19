@@ -111,6 +111,7 @@ class Serializer(metaclass=_SerializerMetaclass):
 
         data = {}
         for name, field in cls.doc_fields.items():
+            empty = False
             try:
                 # first attempt user-defined method of manual serialization
                 v = getattr(cls, 'serialize_{}'.format(name))(obj, source)
@@ -122,7 +123,8 @@ class Serializer(metaclass=_SerializerMetaclass):
                     try:
                         v = cls.get_value(obj, name, source)
                     except InvalidFieldLookup:
-                        continue
+                        v = field.empty()
+                        empty = True
 
                     if callable(v):
                         v = v()
@@ -131,7 +133,7 @@ class Serializer(metaclass=_SerializerMetaclass):
                 v = cls.normalize_value(v)
                 v = cls.adjust_value(name, v)
 
-                if v is not None:
+                if not empty and v is not None:
                     # if the field is an Object or Nested inner doc, the user will have
                     # defined an InnerDoc Mapper; if a related Serializer exists, it will
                     # be used to populate data
