@@ -165,9 +165,14 @@ class Serializer(metaclass=_SerializerMetaclass):
             meta_lookup_value = getattr(cls, 'map_{}'.format(name), None)
             if meta_lookup_value:
                 try:
-                    return cls.get_value(obj, meta_lookup_value)
+                    v = cls.get_value(obj, meta_lookup_value)
                 except InvalidFieldLookup:
                     raise
+
+                if callable(v):
+                    v = v()
+
+                return v
         else:
             return func(obj)
 

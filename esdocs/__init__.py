@@ -26,7 +26,7 @@ except:
 import logging
 
 __appname__ = __package__
-__version__ = "0.1.4"
+__version__ = "0.2"
 
 app_version = "{}/{}".format(__appname__, __version__)
 

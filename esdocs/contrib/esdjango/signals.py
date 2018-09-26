@@ -1,5 +1,5 @@
 import django.dispatch
 
 
-post_indexes_create = django.dispatch.Signal(providing_args=["indexes", "aliases_set"])
-post_indexes_rebuild = django.dispatch.Signal(providing_args=["indexes", "aliases_set"])
+post_index_created = django.dispatch.Signal(providing_args=["index", "alias", "alias_set"])
+post_index_rebuilt = django.dispatch.Signal(providing_args=["index", "alias", "alias_set"])

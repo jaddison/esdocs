@@ -5,11 +5,18 @@ from django.db import connections
 
 from ...controller import Controller
 from ...utils import run as base_run
+from .signals import post_index_created, post_index_rebuilt
 
 logger = logging.getLogger(__name__)
 
 
 class DjangoController(Controller):
+    def on_index_created(self, index, alias, alias_set):
+        post_index_created.send(None, index=index, alias=alias, alias_set=alias_set)
+
+    def on_index_rebuilt(self, index, alias, alias_set):
+        post_index_rebuilt.send(None, index=index, alias=alias, alias_set=alias_set)
+
     def parallel_prep(self):
         # this method is only used when doing parallel bulk indexing
         # via multiprocessing.Pool (see policies.py)

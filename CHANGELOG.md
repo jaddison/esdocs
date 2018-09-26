@@ -1,3 +1,8 @@
+#### 2018-09-26 version 0.2
+
+* Adding in post index create/rebuilt `Controller` hooks and associated Django signals
+* Fixed bug related to callable meta values
+
 #### 2018-09-19 version 0.1.4
 
 * Ensured that appropriate default data was serialized for missing fields.
