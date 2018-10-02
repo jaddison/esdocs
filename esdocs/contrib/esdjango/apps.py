@@ -10,13 +10,16 @@ class ESDocsConfig(AppConfig):
         from ...utils import register_serializers
         from .settings import (
             ESDOCS_SERIALIZER_MODULES,
-            ESDOCS_SERIALIZER_COMPATIBILITY_HOOKS
+            ESDOCS_SERIALIZER_COMPATIBILITY_HOOKS,
+            ESDOCS_USING,
+            ESDOCS_CONNECTIONS
         )
 
         from elasticsearch_dsl import connections
         # TODO: perhaps have some more elaborate multi-client creation steps here, based on settings?
         # then, we can pass in the 'default' client into `register_serializers`
-        client = connections.create_connection(hosts=settings.ELASTICSEARCH_SERVER, timeout=20)
+        connections.configure(**ESDOCS_CONNECTIONS)
+        client = connections.get_connection(ESDOCS_USING)
 
         # this loads the serializers and initializes compatibility hooks
         register_serializers(ESDOCS_SERIALIZER_MODULES, client=client)

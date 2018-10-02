@@ -1,3 +1,8 @@
+#### 2018-10-02 version 0.3
+
+* Fixing connection reset issue when using multi-processing and a remote Elasticsearch server
+* Backward in compatible: changed the way Django configures Elasticsearch connection settings
+
 #### 2018-09-26 version 0.2
 
 * Adding in post index create/rebuilt `Controller` hooks and associated Django signals

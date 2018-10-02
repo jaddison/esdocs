@@ -34,7 +34,7 @@ class Controller:
             # remove the existing connection (but keeps the _kwargs settings for it
             connections.connections._conns.pop(label, None)
             # recreate the connection using the retained _kwargs (view the source)
-            connections.create_connection(label)
+            connections.get_connection(label)
 
     @property
     def indexes(self):
