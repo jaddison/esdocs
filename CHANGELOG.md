@@ -1,7 +1,11 @@
+#### 2018-10-03 version 0.4
+
+* Backward incompatible: Modifying the Django signals to include the Index object
+
 #### 2018-10-02 version 0.3
 
 * Fixing connection reset issue when using multi-processing and a remote Elasticsearch server
-* Backward in compatible: changed the way Django configures Elasticsearch connection settings
+* Backward incompatible: changed the way Django configures Elasticsearch connection settings
 
 #### 2018-09-26 version 0.2
 

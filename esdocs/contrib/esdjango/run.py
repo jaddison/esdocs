@@ -11,11 +11,11 @@ logger = logging.getLogger(__name__)
 
 
 class DjangoController(Controller):
-    def on_index_created(self, index, alias, alias_set):
-        post_index_created.send(None, index=index, alias=alias, alias_set=alias_set)
+    def on_index_created(self, name, alias, index, alias_set):
+        post_index_created.send(None, name=name, alias=alias, index=index, alias_set=alias_set)
 
-    def on_index_rebuilt(self, index, alias, alias_set):
-        post_index_rebuilt.send(None, index=index, alias=alias, alias_set=alias_set)
+    def on_index_rebuilt(self, name, alias, index, alias_set):
+        post_index_rebuilt.send(None, name=name, alias=alias, index=index, alias_set=alias_set)
 
     def parallel_prep(self):
         # this method is only used when doing parallel bulk indexing

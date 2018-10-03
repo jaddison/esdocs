@@ -152,7 +152,7 @@ class Controller:
             })
             logger.info("Created alias '{}' for '{}'.".format(name, index._name))
 
-            self.on_index_rebuilt(index._name, name, True)
+            self.on_index_rebuilt(index._name, name, index, True)
 
         policy.close()
 
@@ -162,10 +162,10 @@ class Controller:
         options['delete_old_indexes'] = True
         self._indexes_delete(**options)
 
-    def on_index_created(self, index, alias, alias_set):
+    def on_index_created(self, name, alias, index, alias_set):
         pass
 
-    def on_index_rebuilt(self, index, alias, alias_set):
+    def on_index_rebuilt(self, name, alias, index, alias_set):
         pass
 
     def _index_create(self, index, alias, set_alias=False):
@@ -176,7 +176,7 @@ class Controller:
             index.aliases(**{alias: {}}).create(using=self.using)
             logger.info("Created index '{}', aliased to '{}'.".format(index._name, alias))
 
-        self.on_index_created(index._name, alias, set_alias)
+        self.on_index_created(index._name, alias, index, set_alias)
 
     def _indexes_delete(self, **options):
         old_indexes = []
