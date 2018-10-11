@@ -225,15 +225,22 @@ class Serializer(metaclass=_SerializerMetaclass):
 
     @classmethod
     def _bulk_stream(cls, op_type=None, **options):
-        for o in cls.fetch_data(**options):
-            data = cls.serialize(o) if op_type != 'delete' else {}
-            data['_op_type'] = op_type if op_type else 'index'
+        op_type = op_type if op_type else 'index'
+        for o in cls.fetch_data(**options, op_type=op_type):
+            if op_type != 'delete':
+                data = cls.serialize(o)
+            else:
+                data = {}
+            data['_op_type'] = op_type
+
             _id = cls.get_meta_value(o, 'id')
             if _id is not None:
                 data['_id'] = _id
+
             routing = cls.get_meta_value(o, 'routing')
             if routing is not None:
                 data['_routing'] = routing
+
             yield data
 
     @classmethod

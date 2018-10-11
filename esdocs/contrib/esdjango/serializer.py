@@ -4,30 +4,33 @@ from ...serializer import Serializer
 class DjangoSerializer(Serializer):
     model = None
     queryset_ordering = 'pk'
+    queryset_select_related = []
     queryset_chunk_size = 500
 
     @classmethod
-    def get_queryset(cls, for_count=False):
+    def get_queryset(cls, for_count=False, op_type=None):
         if not cls.model:
             raise NotImplementedError("The 'model' attribute is missing.")
         qs = cls.model.objects.all()
         if for_count:
             return qs
-        return qs.select_related()
+        return qs.select_related(*cls.queryset_select_related)
 
     @classmethod
     def fetch_data_length(cls, **kwargs):
         queryset = kwargs.get('queryset')
+        op_type = kwargs.get('op_type')
         if queryset is None:
-            queryset = cls.get_queryset(for_count=True)
+            queryset = cls.get_queryset(for_count=True, op_type=op_type)
 
         return queryset.count()
 
     @classmethod
     def fetch_data(cls, **kwargs):
         queryset = kwargs.get('queryset')
+        op_type = kwargs.get('op_type')
         if queryset is None:
-            queryset = cls.get_queryset(for_count=False)
+            queryset = cls.get_queryset(for_count=False, op_type=op_type)
 
         if cls.queryset_ordering:
             queryset = queryset.order_by(cls.queryset_ordering)

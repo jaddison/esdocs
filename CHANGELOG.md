@@ -1,3 +1,8 @@
+#### 2018-10-11 version 0.4.1
+
+* Added `op_type` param to `fetch_data` method for additional flexibility
+* Added `queryset_select_related` attribute to `DjangoSerializer` class
+
 #### 2018-10-03 version 0.4
 
 * Backward incompatible: Modifying the Django signals to include the Index object
