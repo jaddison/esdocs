@@ -8,7 +8,7 @@ class DjangoSerializer(Serializer):
     queryset_chunk_size = 500
 
     @classmethod
-    def get_queryset(cls, for_count=False, op_type=None):
+    def get_queryset(cls, for_count=False, coerce=False):
         if not cls.model:
             raise NotImplementedError("The 'model' attribute is missing.")
         qs = cls.model.objects.all()
@@ -19,18 +19,17 @@ class DjangoSerializer(Serializer):
     @classmethod
     def fetch_data_length(cls, **kwargs):
         queryset = kwargs.get('queryset')
-        op_type = kwargs.get('op_type')
         if queryset is None:
-            queryset = cls.get_queryset(for_count=True, op_type=op_type)
+            queryset = cls.get_queryset(for_count=True)
 
         return queryset.count()
 
     @classmethod
     def fetch_data(cls, **kwargs):
         queryset = kwargs.get('queryset')
-        op_type = kwargs.get('op_type')
+        coerce = kwargs.get('coerce', False)
         if queryset is None:
-            queryset = cls.get_queryset(for_count=False, op_type=op_type)
+            queryset = cls.get_queryset(for_count=False, coerce=coerce)
 
         if cls.queryset_ordering:
             queryset = queryset.order_by(cls.queryset_ordering)

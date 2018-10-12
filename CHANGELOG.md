@@ -1,3 +1,8 @@
+#### 2018-10-12 version 0.4.2
+
+* Added `should_index(...)` test in bulk operations
+* Backward incompatible: removed `op_type` param from `get_queryset(...)` in favour of `coerce` boolean param
+
 #### 2018-10-11 version 0.4.1
 
 * Added `op_type` param to `fetch_data` method for additional flexibility
