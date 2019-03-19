@@ -1,3 +1,8 @@
+#### 2019-03-18 version 0.5.0
+
+* Updated bulk indexing to use `routing` instead of `_routing` (the former has been deprecated for some time)
+* Adding ability to override paginator total count with an external value
+
 #### 2018-10-12 version 0.4.2
 
 * Added `should_index(...)` test in bulk operations

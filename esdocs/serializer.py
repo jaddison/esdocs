@@ -243,7 +243,7 @@ class Serializer(metaclass=_SerializerMetaclass):
 
             routing = cls.get_meta_value(o, 'routing')
             if routing is not None:
-                data['_routing'] = routing
+                data['routing'] = routing
 
             yield data
 
