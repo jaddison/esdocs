@@ -47,7 +47,7 @@ setup(
 
     python_requires='>=3.4',
     install_requires=[
-        'elasticsearch-dsl>6.2.1'
+        'elasticsearch-dsl>6.2.1,<7'
     ],
     extras_require={
         'gevent': ['gevent', 'gipc']
