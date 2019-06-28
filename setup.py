@@ -13,6 +13,7 @@ setup(
     version=esdocs.__version__,
     description='Serialization & bulk indexing package for Elasticsearch; based on elasticsearch-dsl.py, supports multi-processing, Django',
     long_description=long_description,
+    long_description_content_type='text/markdown',
     keywords='elasticsearch django multiprocessing gevent gipc asynchronous bulk index serialization',
 
     license='MIT',
