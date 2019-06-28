@@ -14,6 +14,7 @@ and Elasticsearch have seen major changes over the years; this is a move to keep
 * Depends on elasticsearch-dsl-py rather than the low level elasticsearch-py package
   * You get a lot of functionality for free!
 * Python 3 only
+* esdocs >= 0.6 supports Elasticsearch 7.x
 
 ##### Installation
 

@@ -122,7 +122,7 @@ class Controller:
             original_settings = index.get_settings(using=self.using).get(index._name, {}).get('settings', {})
             index.put_settings(body={
                 "index.number_of_replicas": 0,
-                "index.refresh_interval": '-1'
+                "index.refresh_interval": '10s'
             })
 
             logger.info("Indexing data for '{}'...".format(index._name))

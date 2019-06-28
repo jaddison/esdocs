@@ -14,7 +14,7 @@ class Paginator(DjangoPaginator):
         if count is None:
             # Override to set the count/total number of items; Elasticsearch provides the total
             # as a part of the query results, so we can minimize hits.
-            self._count = response.hits.total
+            self._count = response.hits.total.value
         else:
             # this allows us to manually set the total count; typically most useful when using
             # a cardinality aggregation to get a count

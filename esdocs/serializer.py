@@ -198,7 +198,7 @@ class Serializer(metaclass=_SerializerMetaclass):
             if routing is not None:
                 params['routing'] = routing
 
-            (client or cls.client).index(cls.document._default_index(), 'doc', data, id=_id, params=params)
+            (client or cls.client).index(cls.document._default_index(), '_doc', data, id=_id, params=params)
             return True
         return False
 
@@ -213,7 +213,7 @@ class Serializer(metaclass=_SerializerMetaclass):
         if routing is not None:
             params['routing'] = routing
 
-        (client or cls.client).delete(cls.document._default_index(), 'doc', id=_id, params=params, ignore=[404])
+        (client or cls.client).delete(cls.document._default_index(), '_doc', id=_id, params=params, ignore=[404])
 
     @classmethod
     def fetch_data(cls, **kwargs):
@@ -253,12 +253,11 @@ class Serializer(metaclass=_SerializerMetaclass):
                 client or cls.client,
                 cls._bulk_stream(**options),
                 index=index or cls.document._default_index(),
-                doc_type='doc',
                 raise_on_error=False,
                 yield_ok=False,
                 chunk_size=cls.data_bulk_limit
         ):
             if not ok:
                 action, result = result.popitem()
-                doc_id = '/%s/doc/%s' % (index, result['_id'])
+                doc_id = '/%s/_doc/%s' % (index, result['_id'])
                 logger.warning('Failed to {} document {}: {}'.format(action, doc_id, result))

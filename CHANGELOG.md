@@ -1,3 +1,8 @@
+#### 2019-06-24 version 0.6.0
+
+* Updated to use `_doc` instead of `doc` for the default mapping type name
+* Updated to support Elasticsearch 7.x
+
 #### 2019-03-18 version 0.5.0
 
 * Updated bulk indexing to use `routing` instead of `_routing` (the former has been deprecated for some time)
