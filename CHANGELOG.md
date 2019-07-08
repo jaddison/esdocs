@@ -1,4 +1,4 @@
-#### 2019-06-24 version 0.6.0
+#### 2019-06-28 version 0.6.2
 
 * Updated to use `_doc` instead of `doc` for the default mapping type name
 * Updated to support Elasticsearch 7.x

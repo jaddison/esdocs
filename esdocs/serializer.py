@@ -198,7 +198,7 @@ class Serializer(metaclass=_SerializerMetaclass):
             if routing is not None:
                 params['routing'] = routing
 
-            (client or cls.client).index(cls.document._default_index(), '_doc', data, id=_id, params=params)
+            (client or cls.client).index(cls.document._default_index(), data, id=_id, params=params)
             return True
         return False
 
@@ -213,7 +213,7 @@ class Serializer(metaclass=_SerializerMetaclass):
         if routing is not None:
             params['routing'] = routing
 
-        (client or cls.client).delete(cls.document._default_index(), '_doc', id=_id, params=params, ignore=[404])
+        (client or cls.client).delete(cls.document._default_index(), id=_id, params=params, ignore=[404])
 
     @classmethod
     def fetch_data(cls, **kwargs):
